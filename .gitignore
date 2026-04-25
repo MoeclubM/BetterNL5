@@ -1,0 +1,14 @@
+.vs/
+.artifacts/
+
+**/bin/
+**/obj/
+
+*.user
+*.suo
+*.cache
+*.log
+*.tmp
+*.pdb
+
+msbuild-winui.log
