@@ -3,6 +3,7 @@
 
 **/bin/
 **/obj/
+**/BundleArtifacts/
 
 *.user
 *.suo

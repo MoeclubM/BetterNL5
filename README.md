@@ -85,6 +85,59 @@ dotnet publish .\BetterNL5\BetterNL5.csproj -c Release -r win-x64 --self-contain
 
 如果你想做真正的“安装包”，下一步应加一个 MSIX 或 Inno Setup 打包流程；当前仓库默认还是“解压即用”发布方式。
 
+## MSIX 自动更新
+
+仓库已开始切到单项目 MSIX 路径，目标是通过 GitHub Actions 构建 `.msix` 和 `.appinstaller`，并通过固定 URL 提供更新。
+
+设计目标：
+
+- GitHub Actions 在 `main` 和 tag 上生成签名后的 `MSIX`
+- `.appinstaller` 指向稳定地址
+- 用户首次安装 `.appinstaller`
+- 之后应用启动时自动检查更新
+
+计划中的更新地址：
+
+- `https://moeclubm.github.io/BetterNL5/install/BetterNL5.appinstaller`
+
+GitHub Actions 行为：
+
+- 生成签名后的 `MSIX`
+- 生成对应的 `.appinstaller`
+- 把安装/update 文件发布到 GitHub Pages
+- 在 tag 发布时同时把 `MSIX` 和 `.appinstaller` 上传到 GitHub Releases
+
+首次安装方式：
+
+1. 打开 `https://moeclubm.github.io/BetterNL5/install/BetterNL5.appinstaller`
+2. 下载并双击 `.appinstaller`
+3. 允许 App Installer 安装应用
+4. 后续应用启动时会自动检查更新
+
+这套模式要稳定工作，必须满足两个条件：
+
+1. 包身份固定不变
+2. 签名证书固定不变
+
+因此你后续需要把同一个发布证书长期保存在 GitHub Secrets 中。
+
+建议的仓库 Secrets：
+
+- `MSIX_CERT_BASE64`
+- `MSIX_CERT_PASSWORD`
+
+证书用途：
+
+- GitHub Actions 解码 `.pfx`
+- 每次构建使用同一发布证书签名
+- Windows 才会把新包识别为同一应用的更新
+
+注意：
+
+- GitHub Pages 必须在仓库设置中启用，并使用 **GitHub Actions** 作为来源
+- 包身份 `Name` 和 `Publisher` 以后不能随意改，否则更新链会断
+- 发布证书也必须长期保持一致，否则新包不会被识别为旧包更新
+
 ### CLI
 
 查看状态：

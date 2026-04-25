@@ -1,0 +1,107 @@
+name: Build MSIX
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-msix:
+    runs-on: windows-latest
+    env:
+      SOLUTION_PATH: BetterNL5.sln
+      PROJECT_PATH: BetterNL5/BetterNL5.csproj
+      PACKAGE_IDENTITY_NAME: MoeclubM.BetterNL5
+      APPINSTALLER_URI: https://moeclubm.github.io/BetterNL5/install/BetterNL5.appinstaller
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Compute package version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $raw = "${{ github.ref_name }}"
+            $normalized = $raw.TrimStart('v')
+          }
+          else {
+            $normalized = "0.${{ github.run_number }}.${{ github.run_attempt }}.0"
+          }
+          "package_version=$normalized" >> $env:GITHUB_OUTPUT
+
+      - name: Decode signing certificate
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path .artifacts | Out-Null
+          $bytes = [Convert]::FromBase64String("${{ secrets.MSIX_CERT_BASE64 }}")
+          [IO.File]::WriteAllBytes(".artifacts/BetterNL5-GitHub.pfx", $bytes)
+
+      - name: Restore solution
+        run: dotnet restore "${{ env.SOLUTION_PATH }}"
+
+      - name: Build packaged MSIX
+        shell: pwsh
+        run: |
+          msbuild "${{ env.PROJECT_PATH }}" /restore /m:1 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:GenerateAppxPackageOnBuild=true /p:GenerateAppInstallerFile=true /p:AppInstallerUri="${{ env.APPINSTALLER_URI }}" /p:PackageCertificateKeyFile="${{ github.workspace }}\.artifacts\BetterNL5-GitHub.pfx" /p:PackageCertificatePassword="${{ secrets.MSIX_CERT_PASSWORD }}" /p:AppxPackageDir="${{ github.workspace }}\.artifacts\msix\" /p:AppxPackageVersion="${{ steps.version.outputs.package_version }}"
+
+      - name: Prepare install site files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path .artifacts/site/install | Out-Null
+          Copy-Item .artifacts/msix/* -Destination .artifacts/site/install -Recurse -Force
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterNL5-MSIX
+          path: |
+            .artifacts/msix/**/*.msix
+            .artifacts/msix/**/*.appinstaller
+            .artifacts/site/install/**
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .artifacts/site
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            .artifacts/msix/**/*.msix
+            .artifacts/msix/**/*.appinstaller
+
+  deploy-pages:
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: build-msix
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
