@@ -1,18 +1,28 @@
-name: Build Installer
+name: Build Beta Installer
+
+run-name: Beta Installer · ${{ github.head_ref || github.ref_name }} · @${{ github.actor }} · #${{ github.run_number }}
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 on:
   push:
     branches:
-      - main
+      - '**'
     tags:
-      - "v*"
+      - 'v*'
+      - '*.*.*'
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: beta-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-installer:
+  windows-beta:
     runs-on: windows-latest
     env:
       PROJECT_PATH: BetterNL5/BetterNL5.csproj
@@ -20,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
@@ -60,14 +70,14 @@ jobs:
           & $iscc "Installer\BetterNL5.iss" "/DAppVersion=${{ steps.version.outputs.app_version }}"
 
       - name: Upload installer artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: BetterNL5-Installer
+          name: betternl5-beta-windows-${{ github.run_id }}
           path: .artifacts/installer/*.exe
 
       - name: Create GitHub release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v3
         with:
           draft: false
           prerelease: false

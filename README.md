@@ -97,7 +97,7 @@ iscc .\Installer\BetterNL5.iss /DAppVersion=0.1.0
 
 GitHub Actions 使用 `.github/workflows/installer.yml`：
 
-- 在 `main` 和 `v*` tag 上发布 unpackaged GUI
+- 任意分支 push 生成 beta artifact，tag 生成 release
 - 用 Inno Setup 编译 `BetterNL5-Setup-{version}-win-x64.exe`
 - workflow artifact 上传普通安装器
 - tag 发布时把普通安装器附加到 GitHub Releases
