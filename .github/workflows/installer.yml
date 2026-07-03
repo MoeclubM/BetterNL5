@@ -59,8 +59,7 @@ jobs:
         shell: pwsh
         run: |
           $publishDir = Join-Path "${{ github.workspace }}" "${{ env.PUBLISH_DIR }}"
-          $objDir = Join-Path "${{ github.workspace }}" ".artifacts\publish-obj\"
-          dotnet publish "${{ env.PROJECT_PATH }}" -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -p:BaseIntermediateOutputPath="$objDir" -o "$publishDir"
+          dotnet publish "${{ env.PROJECT_PATH }}" -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o "$publishDir"
 
       - name: Compile installer
         shell: pwsh
