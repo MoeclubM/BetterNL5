@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net48;net10.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net48;net9.0-windows10.0.19041.0</TargetFrameworks>
     <AssemblyName>BetterNL5.Core</AssemblyName>
     <RootNamespace>BetterNL5.Core</RootNamespace>
     <Platforms>x64</Platforms>
@@ -15,7 +15,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">
     <PackageReference Include="System.Management" Version="10.0.0" />
   </ItemGroup>
 </Project>
