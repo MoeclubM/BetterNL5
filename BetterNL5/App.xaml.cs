@@ -34,7 +34,7 @@ namespace BetterNL5
             }
             catch (Exception ex)
             {
-                WriteStartupLog("Launch failed: " + ex);
+                WriteStartupLog($"Launch failed: HResult=0x{ex.HResult:X8} {ex}");
                 throw;
             }
         }
@@ -46,7 +46,7 @@ namespace BetterNL5
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            WriteStartupLog("UI unhandled exception: " + e.Exception);
+            WriteStartupLog($"UI unhandled exception: HResult=0x{e.Exception.HResult:X8} {e.Exception}");
         }
 
         private static void WriteStartupLog(string message)

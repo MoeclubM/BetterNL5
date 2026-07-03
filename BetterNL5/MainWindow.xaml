@@ -47,8 +47,8 @@
             <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Spacing="16">
                     <StackPanel x:Name="PowerPanel" Spacing="16">
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="性能模式" FontSize="20" FontWeight="SemiBold" />
                                 <ToggleSwitch x:Name="ForcePowerToggle" Header="允许在电池或 Type-C 下切换到游戏/狂暴" />
                                 <StackPanel Orientation="Horizontal" Spacing="12">
@@ -59,8 +59,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Padding="16">
-                            <Grid ColumnSpacing="16" RowSpacing="12">
+                        <Border>
+                            <Grid Margin="16" ColumnSpacing="16" RowSpacing="12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
@@ -105,8 +105,8 @@
                     </StackPanel>
 
                     <StackPanel x:Name="FansPanel" Visibility="Collapsed" Spacing="16">
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="风扇状态" FontSize="20" FontWeight="SemiBold" />
                                 <Grid ColumnSpacing="16" RowSpacing="12">
                                     <Grid.ColumnDefinitions>
@@ -165,8 +165,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="自定义风扇" FontSize="20" FontWeight="SemiBold" />
                                 <ComboBox x:Name="FanProfileComboBox" Header="自定义档位" SelectedIndex="0" SelectionChanged="FanProfileComboBox_SelectionChanged">
                                     <ComboBoxItem Content="自定义风扇 1" Tag="1" />
@@ -181,8 +181,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="手动风扇速度" FontSize="20" FontWeight="SemiBold" />
 
                                 <Grid ColumnSpacing="12">
@@ -222,8 +222,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="曲线编辑" FontSize="20" FontWeight="SemiBold" />
                                 <TextBlock Text="温度档位：30,40,50,60,70,80,90,100" TextWrapping="WrapWholeWords" />
                                 <TextBox x:Name="CpuCurveTextBox" Header="CPU 曲线" />
@@ -240,8 +240,8 @@
                     </StackPanel>
 
                     <StackPanel x:Name="LightingPanel" Visibility="Collapsed" Spacing="16">
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="灯效预设" FontSize="20" FontWeight="SemiBold" />
                                 <ComboBox x:Name="LedModuleComboBox" Header="模块" SelectedIndex="0">
                                     <ComboBoxItem Content="游戏" Tag="game" />
@@ -258,8 +258,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Padding="16">
-                            <StackPanel Spacing="12">
+                        <Border>
+                            <StackPanel Margin="16" Spacing="12">
                                 <TextBlock Text="直接写入" FontSize="20" FontWeight="SemiBold" />
                                 <TextBox x:Name="LedModeTextBox" Header="模式" Text="1" />
                                 <TextBox x:Name="LedAlphaTextBox" Header="亮度 nibble" Text="2" />

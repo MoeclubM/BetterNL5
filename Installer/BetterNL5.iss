@@ -9,6 +9,9 @@
 #ifndef OutputDir
 #define OutputDir "..\.artifacts\installer"
 #endif
+#ifndef IconFile
+#define IconFile "..\BetterNL5\Assets\BetterNL5.ico"
+#endif
 
 [Setup]
 AppId={{B6758F1D-43CB-497E-B7F0-E169B7822DEB}
@@ -26,6 +29,7 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=admin
 WizardStyle=modern
+SetupIconFile={#IconFile}
 UninstallDisplayIcon={app}\BetterNL5.exe
 
 [Languages]
@@ -38,8 +42,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{autoprograms}\{#AppName}"; Filename: "{app}\BetterNL5.exe"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\BetterNL5.exe"; Tasks: desktopicon
+Name: "{autoprograms}\{#AppName}"; Filename: "{app}\BetterNL5.exe"; IconFilename: "{app}\BetterNL5.exe"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\BetterNL5.exe"; IconFilename: "{app}\BetterNL5.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\BetterNL5.exe"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
